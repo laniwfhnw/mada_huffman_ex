@@ -1,23 +1,83 @@
 package ch.fhnw.huffman;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 public class HuffmanEncoding {
+  private final String plainText;
   private final Map<Integer, String> encoding;
-  private final String encodedT;
+  private final String encodedText;
 
-  public static HuffmanEncoding create(String input) {
-    return new HuffmanEncoding(input);
+  public static HuffmanEncoding fromPlainText(String plainText) {
+    return new HuffmanEncoding(plainText);
   }
 
-  public HuffmanEncoding(String input) {
-    this.encoding = computeEncoding(buildOccurrenceTable(input));
-    this.encodedT = encodeInput(input, encoding);
+  public static HuffmanEncoding fromEncoding(String encoding,
+                                             String encodedText) {
+    Map<Integer, String> encodingMap = new HashMap<>();
+    Arrays.stream(encoding.split("-")).forEach(e -> {
+      String[] encodingPart = e.split(":");
+      encodingMap.put(Integer.parseInt(encodingPart[0]), encodingPart[1]);
+    });
+    return new HuffmanEncoding(encodingMap, encodedText);
   }
 
-  private static String encodeInput(String input, Map<Integer, String> encoding) {
+  public HuffmanEncoding(String plainText) {
+    this.plainText = plainText;
+    this.encoding = computeEncoding(buildOccurrenceTable(plainText));
+    this.encodedText = encodeInput(plainText, encoding);
+  }
+
+  public HuffmanEncoding(Map<Integer, String> encoding, String encodedText) {
+    this.encoding = encoding;
+    this.encodedText = encodedText;
+    this.plainText = decodeText(encoding, encodedText);
+  }
+
+  public String getPlainText() {
+    return plainText;
+  }
+
+  public String stringifiedEncoding() {
+    return encoding.entrySet().parallelStream()
+                   .map(e -> String.format("%d:%s", e.getKey(), e.getValue()))
+                   .collect(Collectors.joining("-"));
+  }
+
+  public String getEncodedText() {
+    return encodedText;
+  }
+
+  private static String decodeText(Map<Integer, String> encoding,
+                                   String encodedText) {
+    Map<String, Integer> reverseEncoding =
+        encoding.entrySet().parallelStream()
+                .collect(toMap(Entry::getValue, Entry::getKey));
+    StringBuilder bitSeq = new StringBuilder(encodedText);
+    StringBuilder decodedText = new StringBuilder();
+    while (!bitSeq.isEmpty()) {
+      boolean seqFound = false;
+      for (int i = 1; i < bitSeq.length() && !seqFound; i++) {
+        String potentialKey = bitSeq.substring(0, i);
+        if (reverseEncoding.containsKey(potentialKey)) {
+          decodedText.append(
+              (char) reverseEncoding.get(potentialKey).intValue());
+          bitSeq.delete(0, i);
+          seqFound = true;
+        }
+      }
+    }
+    return decodedText.toString();
+  }
+
+  private static String encodeInput(String input,
+                                    Map<Integer, String> encoding) {
     StringBuilder encodedT = new StringBuilder();
     for (int i = 0; i < input.length(); i++) {
       encodedT.append(encoding.get(input.charAt(i)));
@@ -32,7 +92,7 @@ public class HuffmanEncoding {
         occurrences.replace(c, occurrences.get(c) + 1);
       } else {occurrences.put(c, 1);}
     });
-    return occurrences.entrySet().stream()
+    return occurrences.entrySet().parallelStream()
                       .map(e -> new OccurrenceItem(e.getValue(),
                                                    HuffmanNode.createLeaf(
                                                        e.getKey()))).toList();
@@ -75,8 +135,8 @@ public class HuffmanEncoding {
   }
 
   private static void recComputeEncodingTable(HuffmanNode node,
-                                       Map<Integer, String> e,
-                                       String currE) {
+                                              Map<Integer, String> e,
+                                              String currE) {
     if (node.isLeaf()) {
       e.put(node.c, currE);
     } else {
