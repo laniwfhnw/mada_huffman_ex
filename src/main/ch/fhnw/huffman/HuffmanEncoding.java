@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class HuffmanEncoding {
   private final Map<Integer, String> encoding;
+  private final String encodedT;
 
   public static HuffmanEncoding create(String input) {
     return new HuffmanEncoding(input);
@@ -13,6 +14,15 @@ public class HuffmanEncoding {
 
   public HuffmanEncoding(String input) {
     this.encoding = computeEncoding(buildOccurrenceTable(input));
+    this.encodedT = encodeInput(input, encoding);
+  }
+
+  private static String encodeInput(String input, Map<Integer, String> encoding) {
+    StringBuilder encodedT = new StringBuilder();
+    for (int i = 0; i < input.length(); i++) {
+      encodedT.append(encoding.get(input.charAt(i)));
+    }
+    return encodedT.toString();
   }
 
   private List<OccurrenceItem> buildOccurrenceTable(String input) {
@@ -28,13 +38,13 @@ public class HuffmanEncoding {
                                                        e.getKey()))).toList();
   }
 
-  private Map<Integer, String> computeEncoding(
+  private static Map<Integer, String> computeEncoding(
       List<OccurrenceItem> o) {
     HuffmanNode encodingTree = computeEncodingTree(o);
     return computeEncodingTable(encodingTree);
   }
 
-  private HuffmanNode computeEncodingTree(List<OccurrenceItem> o) {
+  private static HuffmanNode computeEncodingTree(List<OccurrenceItem> o) {
     while (o.size() > 1) {
       int lowestI = 0;
       for (int i = 1; i < o.size(); i++) { // skip [0]
@@ -58,13 +68,13 @@ public class HuffmanEncoding {
     return o.get(0).node;
   }
 
-  private Map<Integer, String> computeEncodingTable(HuffmanNode node) {
+  private static Map<Integer, String> computeEncodingTable(HuffmanNode node) {
     Map<Integer, String> encoding = new HashMap<>();
     recComputeEncodingTable(node, encoding, "");
     return encoding;
   }
 
-  private void recComputeEncodingTable(HuffmanNode node,
+  private static void recComputeEncodingTable(HuffmanNode node,
                                        Map<Integer, String> e,
                                        String currE) {
     if (node.isLeaf()) {
