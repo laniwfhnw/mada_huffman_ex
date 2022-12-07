@@ -3,7 +3,6 @@ package ch.fhnw.huffman;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 public class HuffmanEncoding {
   private final Map<Integer, String> encoding;
@@ -60,20 +59,19 @@ public class HuffmanEncoding {
   }
 
   private Map<Integer, String> computeEncodingTable(HuffmanNode node) {
-    if (node.isLeaf()) {
-      throw new IllegalArgumentException("Can't work with single-node tree.");
-    }
     Map<Integer, String> encoding = new HashMap<>();
-    StringBuilder currE = new StringBuilder();
-    Stack<HuffmanNode> parents = new Stack<>();
-    HuffmanNode currN = node.left;
+    recComputeEncodingTable(node, encoding, "");
+    return encoding;
+  }
 
-    if (currN.isLeaf()) {
-      encoding.put(currN.c, currE.toString());
+  private void recComputeEncodingTable(HuffmanNode node,
+                                       Map<Integer, String> e,
+                                       String currE) {
+    if (node.isLeaf()) {
+      e.put(node.c, currE);
     } else {
-      if (currN == parents.peek().left) {
-        currN = parents.peek().right;
-      }
+      recComputeEncodingTable(node.left, e, currE + "0");
+      recComputeEncodingTable(node.right, e, currE + "1");
     }
   }
 
