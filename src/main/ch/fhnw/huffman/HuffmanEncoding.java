@@ -1,5 +1,7 @@
 package ch.fhnw.huffman;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +56,8 @@ public class HuffmanEncoding {
     return encodedText;
   }
 
-  private static String decodeText(Map<Integer, String> encoding,
+  @VisibleForTesting
+  static String decodeText(Map<Integer, String> encoding,
                                    String encodedText) {
     Map<String, Integer> reverseEncoding =
         encoding.entrySet().parallelStream()
@@ -76,16 +79,18 @@ public class HuffmanEncoding {
     return decodedText.toString();
   }
 
-  private static String encodeInput(String input,
+  @VisibleForTesting
+  static String encodeInput(String input,
                                     Map<Integer, String> encoding) {
     StringBuilder encodedT = new StringBuilder();
     for (int i = 0; i < input.length(); i++) {
-      encodedT.append(encoding.get(input.charAt(i)));
+      encodedT.append(encoding.get((int) input.charAt(i)));
     }
     return encodedT.toString();
   }
 
-  private List<OccurrenceItem> buildOccurrenceTable(String input) {
+  @VisibleForTesting
+  static List<OccurrenceItem> buildOccurrenceTable(String input) {
     Map<Integer, Integer> occurrences = new HashMap<>();
     input.chars().forEach(c -> {
       if (occurrences.containsKey(c)) {
@@ -98,13 +103,15 @@ public class HuffmanEncoding {
                                                        e.getKey()))).toList();
   }
 
-  private static Map<Integer, String> computeEncoding(
+  @VisibleForTesting
+  static Map<Integer, String> computeEncoding(
       List<OccurrenceItem> o) {
     HuffmanNode encodingTree = computeEncodingTree(o);
     return computeEncodingTable(encodingTree);
   }
 
-  private static HuffmanNode computeEncodingTree(List<OccurrenceItem> o) {
+  @VisibleForTesting
+  static HuffmanNode computeEncodingTree(List<OccurrenceItem> o) {
     while (o.size() > 1) {
       int lowestI = 0;
       for (int i = 1; i < o.size(); i++) { // skip [0]
@@ -128,15 +135,17 @@ public class HuffmanEncoding {
     return o.get(0).node;
   }
 
-  private static Map<Integer, String> computeEncodingTable(HuffmanNode node) {
+  @VisibleForTesting
+  static Map<Integer, String> computeEncodingTable(HuffmanNode node) {
     Map<Integer, String> encoding = new HashMap<>();
     recComputeEncodingTable(node, encoding, "");
     return encoding;
   }
 
-  private static void recComputeEncodingTable(HuffmanNode node,
-                                              Map<Integer, String> e,
-                                              String currE) {
+  @VisibleForTesting
+  static void recComputeEncodingTable(HuffmanNode node,
+                                      Map<Integer, String> e,
+                                      String currE) {
     if (node.isLeaf()) {
       e.put(node.c, currE);
     } else {
