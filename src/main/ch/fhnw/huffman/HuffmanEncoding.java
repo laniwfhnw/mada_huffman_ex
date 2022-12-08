@@ -159,9 +159,10 @@ public class HuffmanEncoding {
     }
   }
 
-  private static class OccurrenceItem {
-    private final Integer count;
-    private final HuffmanNode node;
+  @VisibleForTesting
+  static class OccurrenceItem {
+    @VisibleForTesting final Integer count;
+    @VisibleForTesting final HuffmanNode node;
 
     public OccurrenceItem(Integer count, HuffmanNode node) {
       this.count = count;
@@ -169,10 +170,11 @@ public class HuffmanEncoding {
     }
   }
 
-  private static class HuffmanNode {
+  @VisibleForTesting
+  static class HuffmanNode {
     private final HuffmanNode left;
     private final HuffmanNode right;
-    private final Integer c;
+    @VisibleForTesting final Integer c;
 
     private static HuffmanNode createBranch(HuffmanNode left,
                                             HuffmanNode right) {
