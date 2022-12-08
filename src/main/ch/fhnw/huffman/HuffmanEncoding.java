@@ -146,10 +146,9 @@ public class HuffmanEncoding {
     return encoding;
   }
 
-  @VisibleForTesting
-  static void recComputeEncodingTable(HuffmanNode node,
-                                      Map<Integer, String> e,
-                                      String currE) {
+  private static void recComputeEncodingTable(HuffmanNode node,
+                                              Map<Integer, String> e,
+                                              String currE) {
     if (node.isLeaf()) {
       e.put(node.c, currE);
     } else {
@@ -175,8 +174,8 @@ public class HuffmanEncoding {
     @VisibleForTesting final HuffmanNode right;
     @VisibleForTesting final Integer c;
 
-    private static HuffmanNode createBranch(HuffmanNode left,
-                                            HuffmanNode right) {
+    @VisibleForTesting
+    static HuffmanNode createBranch(HuffmanNode left, HuffmanNode right) {
       return new HuffmanNode(left, right, null);
     }
 

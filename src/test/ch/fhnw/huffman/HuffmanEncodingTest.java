@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static ch.fhnw.huffman.HuffmanEncoding.HuffmanNode.createBranch;
 import static ch.fhnw.huffman.HuffmanEncoding.HuffmanNode.createLeaf;
 import static ch.fhnw.huffman.HuffmanEncoding.buildOccurrenceTable;
+import static ch.fhnw.huffman.HuffmanEncoding.computeEncodingTable;
 import static ch.fhnw.huffman.HuffmanEncoding.computeEncodingTree;
 import static ch.fhnw.huffman.HuffmanEncoding.decodeText;
 import static ch.fhnw.huffman.HuffmanEncoding.encodeInput;
@@ -126,6 +128,38 @@ public class HuffmanEncodingTest {
     assertEquals('a', res.left.left.c);
     assertEquals('b', res.left.right.c);
     assertEquals('c', res.right.c);
+  }
+
+  @Test
+  public void testComputeEncodingTable_oneSidedTree() {
+    HuffmanNode a = createLeaf((int) 'a');
+    HuffmanNode b = createLeaf((int) 'b');
+    HuffmanNode c = createLeaf((int) 'c');
+    HuffmanNode root = createBranch(createBranch(a, b), c);
+
+    Map<Integer, String> res = computeEncodingTable(root);
+
+    assertEquals(3, res.size());
+    assertEquals("00", res.get((int) 'a'));
+    assertEquals("01", res.get((int) 'b'));
+    assertEquals("1", res.get((int) 'c'));
+  }
+
+  @Test
+  public void testComputeEncodingTable_balancedTree() {
+    HuffmanNode a = createLeaf((int) 'a');
+    HuffmanNode b = createLeaf((int) 'b');
+    HuffmanNode c = createLeaf((int) 'c');
+    HuffmanNode d = createLeaf((int) 'd');
+    HuffmanNode root = createBranch(createBranch(a, b), createBranch(c, d));
+
+    Map<Integer, String> res = computeEncodingTable(root);
+
+    assertEquals(4, res.size());
+    assertEquals("00", res.get((int) 'a'));
+    assertEquals("01", res.get((int) 'b'));
+    assertEquals("10", res.get((int) 'c'));
+    assertEquals("11", res.get((int) 'd'));
   }
 
   // --- HELPER METHODS ---
