@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static ch.fhnw.huffman.HuffmanEncoding.decodeText;
 import static ch.fhnw.huffman.HuffmanEncoding.encodeInput;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -24,6 +25,18 @@ public class HuffmanEncodingTest {
     String res = encMock.stringifiedEncoding();
 
     assertThat(res, anyOf(is("97:0-98:1"), is("98:1-97:0")));
+  }
+
+  @Test
+  public void testDecodeText() {
+    Map<Integer, String> encoding =
+        Map.of((int) 'a', "1", (int) 'b', "01", (int) 'c', "001", (int) 'd',
+               "0001");
+    String encodedText = "10100100010001001011";
+
+    String res = decodeText(encoding, encodedText);
+
+    assertEquals("abcddcba", res);
   }
 
   @Test

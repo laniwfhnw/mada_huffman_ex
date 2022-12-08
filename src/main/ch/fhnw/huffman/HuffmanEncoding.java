@@ -72,7 +72,7 @@ public class HuffmanEncoding {
     StringBuilder decodedText = new StringBuilder();
     while (!bitSeq.isEmpty()) {
       boolean seqFound = false;
-      for (int i = 1; i < bitSeq.length() && !seqFound; i++) {
+      for (int i = 1; i <= bitSeq.length() && !seqFound; i++) {
         String potentialKey = bitSeq.substring(0, i);
         if (reverseEncoding.containsKey(potentialKey)) {
           decodedText.append(
