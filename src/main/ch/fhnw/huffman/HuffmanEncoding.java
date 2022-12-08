@@ -2,6 +2,7 @@ package ch.fhnw.huffman;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +108,8 @@ public class HuffmanEncoding {
     return occurrences.entrySet().parallelStream()
                       .map(e -> new OccurrenceItem(e.getValue(),
                                                    HuffmanNode.createLeaf(
-                                                       e.getKey()))).toList();
+                                                       e.getKey()))).collect(
+            Collectors.toCollection(ArrayList::new));
   }
 
   @VisibleForTesting

@@ -20,7 +20,7 @@ public class Huffman {
     boolean userWantsToDoSth = true;
     do {
       System.out.print(
-          "Would you like to [e]code, [d]ecode or [q]uit?\n> ");
+          "Would you like to [e]ncode, [d]ecode or [q]uit?\n> ");
       String userInput = getUserInput(s);
       if (userInput.length() != 1) {
         System.out.printf("Unexpected input length %d.%n", userInput.length());

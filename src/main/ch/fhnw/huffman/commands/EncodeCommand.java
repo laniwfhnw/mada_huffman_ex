@@ -28,7 +28,7 @@ public class EncodeCommand implements Command {
     paddedEncodedText.append("0".repeat(8 - (paddedEncodedText.length() % 8)));
     byte[] encodedBytes = new byte[paddedEncodedText.length() / 8];
     for (int i = 0; i < encodedBytes.length; i++) {
-      encodedBytes[i] = Byte.parseByte(paddedEncodedText.substring(0, 8));
+      encodedBytes[i] = (byte) Integer.parseInt(paddedEncodedText.substring(0, 8), 2);
       paddedEncodedText.delete(0, 8);
     }
     return encodedBytes;
