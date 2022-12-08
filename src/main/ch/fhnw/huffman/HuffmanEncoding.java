@@ -32,7 +32,8 @@ public class HuffmanEncoding {
 
   public HuffmanEncoding(String plainText) {
     this.plainText = plainText;
-    this.encoding = computeEncoding(buildOccurrenceTable(plainText));
+    this.encoding =
+        computeEncodingTable(computeEncodingTree(buildOccurrenceTable(plainText)));
     this.encodedText = encodeInput(encoding, plainText);
   }
 
@@ -106,13 +107,6 @@ public class HuffmanEncoding {
                       .map(e -> new OccurrenceItem(e.getValue(),
                                                    HuffmanNode.createLeaf(
                                                        e.getKey()))).toList();
-  }
-
-  @VisibleForTesting
-  static Map<Integer, String> computeEncoding(
-      List<OccurrenceItem> o) {
-    HuffmanNode encodingTree = computeEncodingTree(o);
-    return computeEncodingTable(encodingTree);
   }
 
   @VisibleForTesting
