@@ -20,7 +20,7 @@ public class DecodeCommand implements Command {
     byte[] encodedText = readBytes(encodedTextPath);
     StringBuilder bitSeq = new StringBuilder();
     for (byte b : encodedText) {
-      bitSeq.append(Integer.toBinaryString(b));
+      bitSeq.append(Integer.toBinaryString(b & 0xFF));
     }
     // Remove filler
     bitSeq.delete(bitSeq.lastIndexOf("1"), bitSeq.length());
