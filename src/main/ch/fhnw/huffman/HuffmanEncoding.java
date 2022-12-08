@@ -46,10 +46,16 @@ public class HuffmanEncoding {
     return plainText;
   }
 
+  @VisibleForTesting
+  Map<Integer, String> getEncoding() {
+    return encoding;
+  }
+
   public String stringifiedEncoding() {
-    return encoding.entrySet().parallelStream()
-                   .map(e -> String.format("%d:%s", e.getKey(), e.getValue()))
-                   .collect(Collectors.joining("-"));
+    return getEncoding().entrySet().parallelStream()
+                        .map(e -> String.format("%d:%s", e.getKey(),
+                                                e.getValue()))
+                        .collect(Collectors.joining("-"));
   }
 
   public String getEncodedText() {
@@ -58,7 +64,7 @@ public class HuffmanEncoding {
 
   @VisibleForTesting
   static String decodeText(Map<Integer, String> encoding,
-                                   String encodedText) {
+                           String encodedText) {
     Map<String, Integer> reverseEncoding =
         encoding.entrySet().parallelStream()
                 .collect(toMap(Entry::getValue, Entry::getKey));
@@ -81,7 +87,7 @@ public class HuffmanEncoding {
 
   @VisibleForTesting
   static String encodeInput(String input,
-                                    Map<Integer, String> encoding) {
+                            Map<Integer, String> encoding) {
     StringBuilder encodedT = new StringBuilder();
     for (int i = 0; i < input.length(); i++) {
       encodedT.append(encoding.get((int) input.charAt(i)));
