@@ -33,7 +33,8 @@ public class HuffmanEncoding {
   public HuffmanEncoding(String plainText) {
     this.plainText = plainText;
     this.encoding =
-        computeEncodingTable(computeEncodingTree(buildOccurrenceTable(plainText)));
+        computeEncodingTable(
+            computeEncodingTree(buildOccurrenceTable(plainText)));
     this.encodedText = encodeInput(encoding, plainText);
   }
 
@@ -111,6 +112,10 @@ public class HuffmanEncoding {
 
   @VisibleForTesting
   static HuffmanNode computeEncodingTree(List<OccurrenceItem> o) {
+    if (o.size() == 0) {
+      throw new IllegalArgumentException(
+          "Can't calculate encoding tree with no occurrences.");
+    }
     while (o.size() > 1) {
       int lowestI = 0;
       for (int i = 1; i < o.size(); i++) { // skip [0]
@@ -120,7 +125,7 @@ public class HuffmanEncoding {
       }
       int secondLowestI = lowestI == 0 ? 1 : 0;
       for (int i = 1; i < o.size(); i++) { // skip [0]
-        if (lowestI != i && o.get(i).count < o.get(lowestI).count) {
+        if (lowestI != i && o.get(i).count < o.get(secondLowestI).count) {
           secondLowestI = i;
         }
       }
@@ -166,8 +171,8 @@ public class HuffmanEncoding {
 
   @VisibleForTesting
   static class HuffmanNode {
-    private final HuffmanNode left;
-    private final HuffmanNode right;
+    @VisibleForTesting final HuffmanNode left;
+    @VisibleForTesting final HuffmanNode right;
     @VisibleForTesting final Integer c;
 
     private static HuffmanNode createBranch(HuffmanNode left,
@@ -175,7 +180,8 @@ public class HuffmanEncoding {
       return new HuffmanNode(left, right, null);
     }
 
-    private static HuffmanNode createLeaf(Integer value) {
+    @VisibleForTesting
+    static HuffmanNode createLeaf(Integer value) {
       return new HuffmanNode(null, null, value);
     }
 
