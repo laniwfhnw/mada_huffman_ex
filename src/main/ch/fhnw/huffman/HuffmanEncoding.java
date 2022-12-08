@@ -33,7 +33,7 @@ public class HuffmanEncoding {
   public HuffmanEncoding(String plainText) {
     this.plainText = plainText;
     this.encoding = computeEncoding(buildOccurrenceTable(plainText));
-    this.encodedText = encodeInput(plainText, encoding);
+    this.encodedText = encodeInput(encoding, plainText);
   }
 
   public HuffmanEncoding(Map<Integer, String> encoding, String encodedText) {
@@ -86,8 +86,7 @@ public class HuffmanEncoding {
   }
 
   @VisibleForTesting
-  static String encodeInput(String input,
-                            Map<Integer, String> encoding) {
+  static String encodeInput(Map<Integer, String> encoding, String input) {
     StringBuilder encodedT = new StringBuilder();
     for (int i = 0; i < input.length(); i++) {
       encodedT.append(encoding.get((int) input.charAt(i)));

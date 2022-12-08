@@ -40,11 +40,23 @@ public class HuffmanEncodingTest {
   }
 
   @Test
+  public void testEncodeInput() {
+    Map<Integer, String> encoding =
+        Map.of((int) 'a', "1", (int) 'b', "01", (int) 'c', "001", (int) 'd',
+               "0001");
+    String input = "abcddcba";
+
+    String res = encodeInput(encoding, input);
+
+    assertEquals("10100100010001001011", res);
+  }
+
+  @Test
   public void testEncodeInput_singleChar_encodedBitString() {
     String input = "a";
     Map<Integer, String> encoding = Map.of((int) 'a', "0");
 
-    String res = encodeInput(input, encoding);
+    String res = encodeInput(encoding, input);
 
     assertEquals("0", res);
   }
