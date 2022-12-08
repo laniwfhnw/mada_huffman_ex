@@ -184,10 +184,6 @@ public class HuffmanEncoding {
       return new HuffmanNode(null, null, value);
     }
 
-    private boolean isBranch() {
-      return this.c == null;
-    }
-
     private boolean isLeaf() {
       return this.c != null;
     }
