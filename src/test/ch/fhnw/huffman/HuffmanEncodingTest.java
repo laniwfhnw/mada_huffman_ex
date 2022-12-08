@@ -15,16 +15,6 @@ import static org.mockito.Mockito.when;
 public class HuffmanEncodingTest {
 
   @Test
-  public void testEncodeInput_singleChar_encodedBitString() {
-    String input = "a";
-    Map<Integer, String> encoding = Map.of((int) 'a', "0");
-
-    String res = encodeInput(input, encoding);
-
-    assertEquals("0", res);
-  }
-
-  @Test
   public void testStringifiedEncoding_twoEntries_concatedString() {
     HuffmanEncoding encMock = mock(HuffmanEncoding.class);
     when(encMock.getEncoding()).thenReturn(
@@ -34,5 +24,15 @@ public class HuffmanEncodingTest {
     String res = encMock.stringifiedEncoding();
 
     assertThat(res, anyOf(is("97:0-98:1"), is("98:1-97:0")));
+  }
+
+  @Test
+  public void testEncodeInput_singleChar_encodedBitString() {
+    String input = "a";
+    Map<Integer, String> encoding = Map.of((int) 'a', "0");
+
+    String res = encodeInput(input, encoding);
+
+    assertEquals("0", res);
   }
 }
