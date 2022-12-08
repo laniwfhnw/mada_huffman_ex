@@ -10,6 +10,15 @@ import java.util.Scanner;
 import static ch.fhnw.huffman.ConsoleUtil.getUserInput;
 
 class CommandUtil {
+  /**
+   * Asks user for path to existing file, which is intended to be read from
+   * later on. The function guarantees that the file exists when the function
+   * returns.
+   *
+   * @param s           The scanner of System.in.
+   * @param contentDesc The description of the file to which you want the path.
+   * @return The path of the file you're asking for.
+   */
   static Path askForExistingPath(Scanner s, String contentDesc) {
     Path filePath = Path.of("");
     boolean userInputValid = false;
@@ -33,6 +42,14 @@ class CommandUtil {
     return filePath;
   }
 
+  /**
+   * Asks user for path to file, which is intended to be written to later on.
+   * The function guarantees that the path is valid.
+   *
+   * @param s           The scanner of System.in.
+   * @param contentDesc The description of the file to which you want the path.
+   * @return The path of the file you're intending to write to.
+   */
   static Path askForOutputPath(Scanner s, String contentDesc) {
     Path filePath = Path.of("");
     boolean userInputValid = false;

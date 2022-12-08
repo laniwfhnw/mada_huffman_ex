@@ -19,7 +19,7 @@ public class EncodeCommand implements Command {
 
     HuffmanEncoding encoding =
         HuffmanEncoding.fromPlainText(readString(plainTextPath));
-    write(encodingSchemeOutPath, encoding.stringifiedEncoding());
+    write(encodingSchemeOutPath, encoding.getStringifiedEncoding());
     write(encodedTextOutPath,
           binStringToByteArr(padEncodedText(encoding.getEncodedText())));
     return true;

@@ -30,9 +30,9 @@ public class HuffmanEncodingTest {
     HuffmanEncoding encMock = mock(HuffmanEncoding.class);
     when(encMock.getEncoding()).thenReturn(
         Map.of((int) 'a', "0", (int) 'b', "1"));
-    when(encMock.stringifiedEncoding()).thenCallRealMethod();
+    when(encMock.getStringifiedEncoding()).thenCallRealMethod();
 
-    String res = encMock.stringifiedEncoding();
+    String res = encMock.getStringifiedEncoding();
 
     assertThat(res, anyOf(is("97:0-98:1"), is("98:1-97:0")));
   }

@@ -2,6 +2,7 @@ package ch.fhnw.huffman;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,15 +13,34 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * Class to handle any Huffman-encoding-related tasks.
+ */
+@Immutable
 public class HuffmanEncoding {
   private final String plainText;
   private final Map<Integer, String> encoding;
   private final String encodedText;
 
+  /**
+   * Public interface function to create encoding table and encode plain text
+   * accordingly.
+   *
+   * @param plainText The text to encode.
+   * @return The created instance of the huffman-encoding.
+   */
   public static HuffmanEncoding fromPlainText(String plainText) {
     return new HuffmanEncoding(plainText);
   }
 
+  /**
+   * Public interface function to decode encoded text.
+   *
+   * @param encoding    The encoding scheme that was used to encode the plain
+   *                    text into the encoded binary format.
+   * @param encodedText The binary digits of the encoded text.
+   * @return The created instance of the huffman-encoding.
+   */
   public static HuffmanEncoding fromEncoding(String encoding,
                                              String encodedText) {
     Map<Integer, String> encodingMap = new HashMap<>();
@@ -31,7 +51,12 @@ public class HuffmanEncoding {
     return new HuffmanEncoding(encodingMap, encodedText);
   }
 
-  public HuffmanEncoding(String plainText) {
+  /**
+   * Constructor for encoding text.
+   *
+   * @param plainText Text to be encoded.
+   */
+  private HuffmanEncoding(String plainText) {
     this.plainText = plainText;
     this.encoding =
         computeEncodingTable(
@@ -39,7 +64,13 @@ public class HuffmanEncoding {
     this.encodedText = encodeInput(encoding, plainText);
   }
 
-  public HuffmanEncoding(Map<Integer, String> encoding, String encodedText) {
+  /**
+   * Constructor for decoding text.
+   *
+   * @param encoding    Encoding scheme used to decode encoded text.
+   * @param encodedText Encoded text.
+   */
+  private HuffmanEncoding(Map<Integer, String> encoding, String encodedText) {
     this.encoding = encoding;
     this.encodedText = encodedText;
     this.plainText = decodeText(encoding, encodedText);
@@ -54,7 +85,12 @@ public class HuffmanEncoding {
     return encoding;
   }
 
-  public String stringifiedEncoding() {
+  /**
+   * Provides encoding in a string format ready to be saved to file.
+   *
+   * @return String format of encoding.
+   */
+  public String getStringifiedEncoding() {
     return getEncoding().entrySet().parallelStream()
                         .map(e -> String.format("%d:%s", e.getKey(),
                                                 e.getValue()))
@@ -65,6 +101,13 @@ public class HuffmanEncoding {
     return encodedText;
   }
 
+  /**
+   * Decodes encoded text according to original encoding scheme.
+   *
+   * @param encoding    Encoding scheme used for encoding.
+   * @param encodedText Encoded text.
+   * @return The decoded text.
+   */
   @VisibleForTesting
   static String decodeText(Map<Integer, String> encoding,
                            String encodedText) {
@@ -88,6 +131,13 @@ public class HuffmanEncoding {
     return decodedText.toString();
   }
 
+  /**
+   * Encodes plain text according to given encoding scheme.
+   *
+   * @param encoding Encoding scheme used for encoding.
+   * @param input    Plain text.
+   * @return The encoded text.
+   */
   @VisibleForTesting
   static String encodeInput(Map<Integer, String> encoding, String input) {
     StringBuilder encodedT = new StringBuilder();
@@ -97,6 +147,12 @@ public class HuffmanEncoding {
     return encodedT.toString();
   }
 
+  /**
+   * Builds table of occurrences for a given plain text string.
+   *
+   * @param input Plain text string.
+   * @return Occurrence table with HuffmanNodes as elements.
+   */
   @VisibleForTesting
   static List<OccurrenceItem> buildOccurrenceTable(String input) {
     Map<Integer, Integer> occurrences = new HashMap<>();
@@ -112,6 +168,15 @@ public class HuffmanEncoding {
             Collectors.toCollection(ArrayList::new));
   }
 
+  /**
+   * Builds the encoding tree from the occurrence table. If there are multiple
+   * elements with the same occurrence probability the order dictates which of
+   * them are "less-likely"; the ones with a lower index are then considered
+   * less likely to occur.
+   *
+   * @param o Occurrence table.
+   * @return The root node of the encoding tree.
+   */
   @VisibleForTesting
   static HuffmanNode computeEncodingTree(List<OccurrenceItem> o) {
     if (o.size() == 0) {
@@ -141,6 +206,13 @@ public class HuffmanEncoding {
     return o.get(0).node;
   }
 
+  /**
+   * Computes the mapping of character to binary string for a given Huffman
+   * tree.
+   *
+   * @param node The root node of the encoding tree.
+   * @return Map from ASCII value of character to binary string encoding.
+   */
   @VisibleForTesting
   static Map<Integer, String> computeEncodingTable(HuffmanNode node) {
     Map<Integer, String> encoding = new HashMap<>();
@@ -159,6 +231,10 @@ public class HuffmanEncoding {
     }
   }
 
+  /**
+   * Represents a row in the occurrence table that is constructed to encode a
+   * text.
+   */
   @VisibleForTesting
   static class OccurrenceItem {
     @VisibleForTesting final Integer count;
@@ -170,6 +246,9 @@ public class HuffmanEncoding {
     }
   }
 
+  /**
+   * Represents a node in the Huffman encoding tree.
+   */
   @VisibleForTesting
   static class HuffmanNode {
     @VisibleForTesting final HuffmanNode left;
