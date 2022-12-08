@@ -1,6 +1,7 @@
 package ch.fhnw.huffman.commands;
 
 import ch.fhnw.huffman.HuffmanEncoding;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.nio.file.Path;
 import java.util.Scanner;
@@ -17,18 +18,27 @@ public class DecodeCommand implements Command {
     Path encodedTextPath = askForExistingPath(s, "encoded text");
     Path outputPath = askForOutputPath(s, "decoded text");
 
-    byte[] encodedText = readBytes(encodedTextPath);
-    StringBuilder bitSeq = new StringBuilder();
-    for (byte b : encodedText) {
-      bitSeq.append(Integer.toBinaryString(b & 0xFF));
-    }
-    // Remove filler
-    bitSeq.delete(bitSeq.lastIndexOf("1"), bitSeq.length());
+    String stringifiedEncodedText =
+        stringifyEncodedText(readBytes(encodedTextPath));
+    String cleanedEncodedText = removeFiller(stringifiedEncodedText);
 
     write(outputPath,
           HuffmanEncoding.fromEncoding(readString(encodingSchemePath),
-                                       bitSeq.toString())
-                         .getPlainText());
+                                       cleanedEncodedText).getPlainText());
     return true;
+  }
+
+  @VisibleForTesting
+  static String stringifyEncodedText(byte[] encodedText) {
+    StringBuilder bitSeq = new StringBuilder();
+    for (byte b : encodedText) {
+      bitSeq.append(String.format("%8s", Integer.toBinaryString(b & 0xFF)));
+    }
+    return bitSeq.toString().replace(' ', '0');
+  }
+
+  @VisibleForTesting
+  static String removeFiller(String encodedText) {
+    return encodedText.substring(0, encodedText.lastIndexOf('1'));
   }
 }
